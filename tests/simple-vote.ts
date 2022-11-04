@@ -7,7 +7,7 @@ enum Choice {
   pb = 'pb',
   j = 'jelly',
 }
-describe.only('Solana Simple Vote', () => {
+describe('Solana Simple Vote', () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 

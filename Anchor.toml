@@ -3,6 +3,7 @@ seeds = false
 skip-lint = false
 [programs.localnet]
 simple_vote = "7SGsTFdVygX11d3Dz3ZaBJKnr2mBaX9M8fxc4q6e5rNZ"
+dedup_vote = "5Q4KkEoLHzFNGaDZzfarZ99EbgMpwQsERAyTUuYEqANi"
 
 [registry]
 url = "https://api.apr.dev"
