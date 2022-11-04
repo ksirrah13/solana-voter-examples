@@ -28,7 +28,7 @@ const printVotes = () => {
   console.table({ PB: votes[Choice.pb], Jelly: votes[Choice.j] });
 };
 
-describe('Deduplicated Vote', function () {
+describe.skip('Deduplicated Vote', function () {
   const testVotes = (pb, j) => {
     expect(votes[Choice.pb]).to.equal(pb);
     expect(votes[Choice.j]).to.equal(j);
