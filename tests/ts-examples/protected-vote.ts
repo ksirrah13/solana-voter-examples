@@ -27,7 +27,7 @@ const printVotes = () => {
   console.table({ PB: votes[Choice.pb], Jelly: votes[Choice.j] });
 };
 
-describe.only('Protected Vote', function () {
+describe.only('Protected Vote', () => {
   const testVotes = (pb, j) => {
     expect(votes[Choice.pb]).to.equal(pb);
     expect(votes[Choice.j]).to.equal(j);
@@ -36,30 +36,30 @@ describe.only('Protected Vote', function () {
   const voteKyle = choice => vote(choice, 'kyle');
   const voteSam = choice => vote(choice, 'sam');
 
-  before('reset votes to zero', function () {
+  before('reset votes to zero', () => {
     votes[Choice.pb] = 0;
     votes[Choice.j] = 0;
   });
 
-  afterEach(function () {
+  afterEach(() => {
     printVotes();
   });
 
-  it('starts with zero votes', function () {
+  it('starts with zero votes', () => {
     testVotes(0, 0);
   });
 
-  it('kyle votes for pb', function () {
+  it('kyle votes for pb', () => {
     voteKyle(Choice.pb);
     testVotes(1, 0);
   });
 
-  it('kyle votes for jelly', function () {
+  it('kyle votes for jelly', () => {
     voteKyle(Choice.j);
     testVotes(0, 1);
   });
 
-  it('fails when kyle votes alot for pb', function () {
+  it('fails when kyle votes alot for pb', () => {
     try {
       voteKyle(Choice.pb);
       voteKyle(Choice.pb);
@@ -74,12 +74,12 @@ describe.only('Protected Vote', function () {
     testVotes(1, 0);
   });
 
-  it('sam votes for jelly', function () {
+  it('sam votes for jelly', () => {
     voteSam(Choice.j);
     testVotes(1, 1);
   });
 
-  it('sam votes for pb', function () {
+  it('sam votes for pb', () => {
     voteSam(Choice.pb);
     testVotes(2, 0);
   });
