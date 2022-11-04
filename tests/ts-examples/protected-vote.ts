@@ -1,10 +1,11 @@
+/* eslint-disable prefer-arrow-callback */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { expect } from 'chai';
 import { afterEach, before, describe } from 'mocha';
 
 enum Choice {
-  pb = 1,
-  j = 2,
+  pb,
+  j,
 }
 
 const votes = { [Choice.pb]: 0, [Choice.j]: 0 };
@@ -27,7 +28,7 @@ const printVotes = () => {
   console.table({ PB: votes[Choice.pb], Jelly: votes[Choice.j] });
 };
 
-describe.only('Protected Vote', () => {
+describe.only('Protected Vote', function () {
   const testVotes = (pb, j) => {
     expect(votes[Choice.pb]).to.equal(pb);
     expect(votes[Choice.j]).to.equal(j);
@@ -36,30 +37,30 @@ describe.only('Protected Vote', () => {
   const voteKyle = choice => vote(choice, 'kyle');
   const voteSam = choice => vote(choice, 'sam');
 
-  before('reset votes to zero', () => {
+  before('reset votes to zero', function () {
     votes[Choice.pb] = 0;
     votes[Choice.j] = 0;
   });
 
-  afterEach(() => {
+  afterEach(function () {
     printVotes();
   });
 
-  it('starts with zero votes', () => {
+  it('starts with zero votes', function () {
     testVotes(0, 0);
   });
 
-  it('kyle votes for pb', () => {
+  it('kyle votes for pb', function () {
     voteKyle(Choice.pb);
     testVotes(1, 0);
   });
 
-  it('kyle votes for jelly', () => {
+  it('kyle votes for jelly', function () {
     voteKyle(Choice.j);
     testVotes(0, 1);
   });
 
-  it('fails when kyle votes alot for pb', () => {
+  it('fails when kyle votes alot for pb', function () {
     try {
       voteKyle(Choice.pb);
       voteKyle(Choice.pb);
@@ -74,12 +75,12 @@ describe.only('Protected Vote', () => {
     testVotes(1, 0);
   });
 
-  it('sam votes for jelly', () => {
+  it('sam votes for jelly', function () {
     voteSam(Choice.j);
     testVotes(1, 1);
   });
 
-  it('sam votes for pb', () => {
+  it('sam votes for pb', function () {
     voteSam(Choice.pb);
     testVotes(2, 0);
   });
