@@ -8,6 +8,9 @@ enum Choice {
   pb = 'pb',
   j = 'jelly',
 }
+
+const VOTERS = ['kyle', 'sam', 'kyle1', 'kyle2'];
+
 describe.only('Solana Deduplicated Vote', () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
@@ -15,7 +18,7 @@ describe.only('Solana Deduplicated Vote', () => {
   const program = anchor.workspace.DedupVote as Program<DedupVote>;
   const voteAccount = anchor.web3.Keypair.generate();
 
-  let voterKeys;
+  let voterKeys: Record<string, anchor.web3.Keypair>;
 
   const printVotes = async () => {
     const votes = await program.account.votes.fetch(voteAccount.publicKey);
@@ -33,9 +36,21 @@ describe.only('Solana Deduplicated Vote', () => {
     if (!voterKey) {
       throw Error('missing voter key');
     }
+    const [myVote] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        anchor.utils.bytes.utf8.encode('vote'),
+        voteAccount.publicKey.toBuffer(),
+        voterKey.publicKey.toBuffer(),
+      ],
+      program.programId,
+    );
     await program.methods
       .vote(choice)
-      .accounts({ votes: voteAccount.publicKey, voter: voterKey.publicKey })
+      .accounts({
+        votes: voteAccount.publicKey,
+        voter: voterKey.publicKey,
+        myVote,
+      })
       .signers([voterKey])
       .rpc();
   };
@@ -54,10 +69,30 @@ describe.only('Solana Deduplicated Vote', () => {
       .accounts({ votes: voteAccount.publicKey })
       .signers([voteAccount])
       .rpc();
-    voterKeys = ['kyle', 'sam', 'kyle1', 'kyle2'].reduce((obj, name) => {
+    voterKeys = VOTERS.reduce((obj, name) => {
       obj[name] = anchor.web3.Keypair.generate();
       return obj;
     }, {});
+    for (const voter of VOTERS) {
+      const voterKey = voterKeys[voter];
+      const [myVote] = await anchor.web3.PublicKey.findProgramAddress(
+        [
+          anchor.utils.bytes.utf8.encode('vote'),
+          voteAccount.publicKey.toBuffer(),
+          voterKey.publicKey.toBuffer(),
+        ],
+        program.programId,
+      );
+      await program.methods
+        .register()
+        .accounts({
+          votes: voteAccount.publicKey,
+          voter: voterKey.publicKey,
+          myVote,
+        })
+        .signers([voterKey])
+        .rpc();
+    }
   });
 
   afterEach(async function () {
@@ -86,7 +121,7 @@ describe.only('Solana Deduplicated Vote', () => {
       await voteKyle(Choice.pb);
     } catch (e) {
       expect(e).to.exist;
-      expect(e.message).to.equal('you already voted!');
+      expect(e.error.errorMessage).to.equal('you already voted!');
     }
 
     await testVotes(1, 0);
@@ -103,7 +138,7 @@ describe.only('Solana Deduplicated Vote', () => {
   });
 
   it('kyle1 votes for pb', async function () {
-    vote(Choice.pb, 'kyle1');
+    await vote(Choice.pb, 'kyle1');
     await testVotes(3, 0);
   });
 
