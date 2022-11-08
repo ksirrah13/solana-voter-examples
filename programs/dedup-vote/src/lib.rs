@@ -53,7 +53,9 @@ pub struct Initialize<'info> {
 
 #[derive(Accounts)]
 pub struct Vote<'info> {
-    #[account(mut, seeds = [b"vote", votes.key().as_ref(), voter.key().as_ref()], bump = my_vote.bump)]
+    #[account(mut, 
+        seeds = [b"vote", votes.key().as_ref(), voter.key().as_ref()], 
+        bump = my_vote.bump)]
     pub my_vote: Account<'info, MyVote>,
     #[account(mut)]
     pub votes: Account<'info, Votes>,
@@ -62,7 +64,8 @@ pub struct Vote<'info> {
 
 #[derive(Accounts)]
 pub struct Register<'info> {
-    #[account(init, payer = payer, space = 8 + 40 + 1, seeds = [b"vote", votes.key().as_ref(), voter.key().as_ref()], bump)]
+    #[account(init, payer = payer, space = 8 + 40 + 1, 
+        seeds = [b"vote", votes.key().as_ref(), voter.key().as_ref()], bump)]
     pub my_vote: Account<'info, MyVote>,
     pub votes: Account<'info, Votes>,
     pub voter: Signer<'info>,

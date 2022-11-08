@@ -11,7 +11,7 @@ enum Choice {
 
 const VOTERS = ['kyle', 'sam', 'kyle1', 'kyle2'];
 
-describe.only('Solana Deduplicated Vote', () => {
+describe.skip('Solana Deduplicated Vote', () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 

@@ -18,7 +18,7 @@ const printVotes = () => {
   console.table({ PB: votes[Choice.pb], Jelly: votes[Choice.j] });
 };
 
-describe('Simple Vote', function () {
+describe.skip('Simple Vote', function () {
   const testVotes = (pb, j) => {
     expect(votes[Choice.pb]).to.equal(pb);
     expect(votes[Choice.j]).to.equal(j);
