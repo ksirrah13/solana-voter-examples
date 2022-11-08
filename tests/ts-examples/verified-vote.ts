@@ -8,11 +8,16 @@ enum Choice {
   j,
 }
 
+interface VoterRecord {
+  auth: string;
+  age: number;
+}
+
 const votes = { [Choice.pb]: 0, [Choice.j]: 0 };
 
 const voters = {};
 
-const authorizedVoters: Record<string, { auth: string; age: number }> = {
+const authorizedVoters: Record<string, VoterRecord> = {
   kyle: { auth: 'youKilledKenny', age: 50 },
   sam: { auth: 'toitles', age: 7 },
 };
